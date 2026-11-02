@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $slideDirectory = Join-Path $repositoryRoot "_slides"
 $resourceDirectory = Join-Path $repositoryRoot "_resources"
-$slideNames = @("slide-01.svg", "slide-02.svg", "slide-03.svg", "slide-04.svg")
+$slideNames = 1..17 | ForEach-Object { "slide-{0:D2}.svg" -f $_ }
 $documentsToValidate = $slideNames + @("slide-template.svg")
 $repositoryUrl = "https://github.com/Djohnnie/TheMicrosoftAgentFramework--redev-2026"
 
@@ -36,8 +36,13 @@ foreach ($slideName in $documentsToValidate) {
         $expectedHeader = switch ($slideName) {
             "slide-02.svg" { "&gt;&gt; THE SPEAKER"; break }
             "slide-03.svg" { "&gt;&gt; TAKE IT WITH YOU"; break }
-            "slide-04.svg" { "&gt;&gt; THANK YOU FOR JOINING"; break }
-            default { "&gt;&gt; SECTION TITLE" }
+            { $_ -in @("slide-04.svg", "slide-05.svg", "slide-06.svg", "slide-07.svg", "slide-08.svg") } { "&gt;&gt; THE EVOLUTION OF AI"; break }
+            "slide-09.svg" { "&gt;&gt; LLM FUNDAMENTALS"; break }
+            "slide-10.svg" { "&gt;&gt; EXAMPLE 01 / HANDS-ON"; break }
+            { $_ -in @("slide-11.svg", "slide-12.svg", "slide-13.svg", "slide-14.svg", "slide-15.svg", "slide-16.svg") } { "&gt;&gt; THE AGENT FRAMEWORK"; break }
+            "slide-17.svg" { "&gt;&gt; THANK YOU FOR JOINING"; break }
+            "slide-template.svg" { "&gt;&gt; SECTION TITLE"; break }
+            default { throw "Unexpected slide name: $slideName" }
         }
         $header = $document.SelectSingleNode("//*[local-name()='text' and @x='88' and @y='86' and @font-size='30' and @fill='#dbf536']")
         if (-not $header -or $header.InnerText -ne $expectedHeader.Replace("&gt;", ">")) {
@@ -105,7 +110,8 @@ foreach ($slideName in $documentsToValidate) {
             throw "Missing standard repository footer link in $slideName."
         }
         $pageNumber = $document.SelectSingleNode("//*[local-name()='text' and @x='1832' and @y='1054' and @fill='#dbf536']")
-        if (-not $pageNumber -or $pageNumber.InnerText -notmatch '^\d{2} / 04$') {
+        $expectedPageNumber = if ($slideName -eq "slide-template.svg") { '^XX / 17$' } else { '^\d{2} / 17$' }
+        if (-not $pageNumber -or $pageNumber.InnerText -notmatch $expectedPageNumber) {
             throw "Missing green slide number in the expected format in $slideName."
         }
     }
@@ -124,23 +130,100 @@ foreach ($slideName in $documentsToValidate) {
             throw "Slide 3 should copy the QR SVG content instead of embedding it as an image."
         }
     }
-    if ($slideName -eq "slide-04.svg") {
+    if ($slideName -eq "slide-17.svg") {
         foreach ($closingText in @("Questions?", "Thanks for being part of the conversation.", "What questions can I answer?")) {
             if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='$closingText']")) {
-                throw "Slide 4 is missing closing-slide text: $closingText"
+                throw "Slide 17 is missing closing-slide text: $closingText"
             }
         }
         if ($document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='Thank you']") -or
             $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='for joining']")) {
-            throw "Slide 4 should keep the thank-you message in the header, not the title."
+            throw "Slide 17 should keep the thank-you message in the header, not the title."
         }
         $questionTitle = $document.SelectSingleNode("//*[local-name()='text' and @x='88' and @y='432' and @class='display' and normalize-space(.)='Questions?']")
         if (-not $questionTitle) {
-            throw "Slide 4 title should be Questions?."
+            throw "Slide 17 title should be Questions?."
         }
         $qrGroup = $document.SelectSingleNode("//*[local-name()='g' and @transform='translate(1167 195) scale(0.52734375)']")
         if (-not $qrGroup -or $qrGroup.SelectNodes("./*[local-name()='path']").Count -lt 400 -or $qrGroup.SelectSingleNode(".//*[local-name()='image']")) {
-            throw "Slide 4 is missing its inline repository QR artwork."
+            throw "Slide 17 is missing its inline repository QR artwork."
+        }
+    }
+    if ($slideName -in @("slide-04.svg", "slide-05.svg", "slide-06.svg", "slide-07.svg", "slide-08.svg")) {
+        $stage = [int]$slideName.Substring(6, 2) - 4
+        $evolutionCards = @("Rules-based", "Machine learning", "Deep learning", "Generative AI")
+        for ($cardIndex = 0; $cardIndex -lt $evolutionCards.Count; $cardIndex++) {
+            $card = $document.SelectSingleNode("//*[local-name()='g' and @aria-label='$($evolutionCards[$cardIndex])']")
+            $shouldBeHidden = $stage -lt ($cardIndex + 1)
+            if (-not $card -or (($card.GetAttribute("style") -eq "display:none") -ne $shouldBeHidden)) {
+                throw "Slide $slideName has an unexpected reveal state for $($evolutionCards[$cardIndex])."
+            }
+        }
+        $sourceLink = $document.SelectSingleNode("//*[local-name()='a' and @href='https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/testing-modern-ai-systems-from-rule-based-systems-to-deep-learning-and-large-lan/4429518']")
+        if (-not $sourceLink -or $sourceLink.InnerText -ne "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/testing-modern-ai-systems-from-rule-based-systems-to-deep-learning-and-large-lan/4429518") {
+            throw "Slide $slideName is missing its Microsoft TechCommunity source link."
+        }
+        $approachNote = $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='A shift in approach, not a strict hierarchy: deep learning is a type of machine learning, and generative AI often uses it.']")
+        if (($slideName -eq "slide-08.svg") -ne [bool]$approachNote) {
+            throw "The approach note should appear only on slide 8."
+        }
+    }
+    if ($slideName -eq "slide-09.svg") {
+        $sourceUrl = "https://learn.microsoft.com/en-us/agent-framework/journey/llm-fundamentals"
+        $sourceLink = $document.SelectSingleNode("//*[local-name()='a' and @href='$sourceUrl']")
+        if (-not $sourceLink -or $sourceLink.InnerText -ne $sourceUrl) {
+            throw "Slide 9 is missing its Microsoft Learn LLM fundamentals source link."
+        }
+        foreach ($processStep in @("Input", "Tokenization", "Embeddings", "Next-token prediction", "Selection and append")) {
+            if (-not $document.SelectSingleNode("//*[local-name()='g' and @aria-label='$processStep']")) {
+                throw "Slide 9 is missing the $processStep stage."
+            }
+        }
+        if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='Repeat prediction and appending until a stop token or output limit.']")) {
+            throw "Slide 9 is missing the autoregressive generation loop takeaway."
+        }
+    }
+    if ($slideName -eq "slide-10.svg") {
+        $sourceUrl = "https://github.com/Djohnnie/MicrosoftAgentFrameworkWorkshop-DotNetDeveloperDays-Warsaw-2026/tree/main/exercises/exercise-001"
+        $sourceLink = $document.SelectSingleNode("//*[local-name()='a' and @href='$sourceUrl']")
+        if (-not $sourceLink -or $sourceLink.InnerText -ne $sourceUrl) {
+            throw "Slide 10 is missing its Token Visualizer source link."
+        }
+        foreach ($step in @("Configure", "Run", "Explore")) {
+            if (-not $document.SelectSingleNode("//*[local-name()='g' and @aria-label='$step']")) {
+                throw "Slide 10 is missing the $step step."
+            }
+        }
+        if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='examples\example-01']")) {
+            throw "Slide 10 is missing the example-01 path."
+        }
+    }
+    if ($slideName -in @("slide-11.svg", "slide-12.svg", "slide-13.svg", "slide-14.svg", "slide-15.svg", "slide-16.svg")) {
+        $stage = [int]$slideName.Substring(6, 2) - 10
+        $frameworkHeader = $document.SelectSingleNode("//*[local-name()='text' and @x='88' and @y='86']")
+        if (-not $frameworkHeader -or $frameworkHeader.InnerText -ne ">> THE AGENT FRAMEWORK") {
+            throw "Slide $slideName is missing the THE AGENT FRAMEWORK header."
+        }
+        $sourceLabel = $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='SOURCE' and @fill='#dbf536']")
+        $sourceLink = $document.SelectSingleNode("//*[local-name()='a' and @href='https://learn.microsoft.com/en-us/agent-framework/overview/']")
+        if (-not $sourceLabel -or -not $sourceLink -or -not $sourceLink.SelectSingleNode("./*[local-name()='text' and @fill='#b8b8b8']")) {
+            throw "Slide $slideName is missing its green SOURCE label and gray Microsoft Learn link."
+        }
+        $cards = @("Agents", "Harness agent", "Workflows", "Integrations")
+        for ($cardIndex = 0; $cardIndex -lt $cards.Count; $cardIndex++) {
+            $card = $document.SelectSingleNode("//*[local-name()='g' and @aria-label='$($cards[$cardIndex])']")
+            $shouldBeHidden = $stage -lt ($cardIndex + 2)
+            if (-not $card -or (($card.GetAttribute("style") -eq "display:none") -ne $shouldBeHidden)) {
+                throw "Slide $slideName has an unexpected reveal state for $($cards[$cardIndex])."
+            }
+        }
+        $languageBlock = $document.SelectSingleNode("//*[local-name()='g' and @aria-label='Supported languages']")
+        $languageShouldBeHidden = $stage -lt 6
+        if (-not $languageBlock -or (($languageBlock.GetAttribute("style") -eq "display:none") -ne $languageShouldBeHidden)) {
+            throw "Slide $slideName has an unexpected language-support reveal state."
+        }
+        if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='Build in .NET, Python and Go (preview).']")) {
+            throw "Slide $slideName is missing the language-support callout."
         }
     }
     if ($slideName -eq "slide-02.svg") {

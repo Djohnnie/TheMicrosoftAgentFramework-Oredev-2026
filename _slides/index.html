@@ -9,20 +9,33 @@
 </head>
 <body>
   <main class="deck" aria-label="Presentation">
-    <img class="slide" id="slide" src="slide-01.svg" alt="Slide 1 of 4: Enable GenAI in your applications">
+    <img class="slide" id="slide" src="slide-01.svg" alt="Slide 1 of 17: Enable GenAI in your applications">
   </main>
   <p class="hint">← → navigate · F fullscreen</p>
   <nav class="controls" aria-label="Slide navigation">
     <button id="previous" type="button" aria-label="Previous slide">←</button>
-    <span id="counter" aria-live="polite">01 / 04</span>
+    <span id="counter" aria-live="polite">01 / 17</span>
     <button id="next" type="button" aria-label="Next slide">→</button>
   </nav>
   <script>
     const slides = [
-      { src: "slide-01.svg", alt: "Slide 1 of 4: Enable GenAI in your applications" },
-      { src: "slide-02.svg", alt: "Slide 2 of 4: Johnny Hooyberghs" },
-      { src: "slide-03.svg", alt: "Slide 3 of 4: Scan to visit the repository" },
-      { src: "slide-04.svg", alt: "Slide 4 of 4: Thank you for joining, questions?" }
+      { src: "slide-01.svg", alt: "Slide 1 of 17: Enable GenAI in your applications" },
+      { src: "slide-02.svg", alt: "Slide 2 of 17: Johnny Hooyberghs" },
+      { src: "slide-03.svg", alt: "Slide 3 of 17: Scan to visit the repository" },
+      { src: "slide-04.svg", alt: "Slide 4 of 17: The evolution of AI" },
+      { src: "slide-05.svg", alt: "Slide 5 of 17: Rules-based AI" },
+      { src: "slide-06.svg", alt: "Slide 6 of 17: Machine learning" },
+      { src: "slide-07.svg", alt: "Slide 7 of 17: Deep learning" },
+      { src: "slide-08.svg", alt: "Slide 8 of 17: Generative AI" },
+      { src: "slide-09.svg", alt: "Slide 9 of 17: How large language models generate text" },
+      { src: "slide-10.svg", alt: "Slide 10 of 17: Example 01 tokenization demo" },
+      { src: "slide-11.svg", alt: "Slide 11 of 17: The Agent Framework introduction" },
+      { src: "slide-12.svg", alt: "Slide 12 of 17: Agents" },
+      { src: "slide-13.svg", alt: "Slide 13 of 17: Harness agent" },
+      { src: "slide-14.svg", alt: "Slide 14 of 17: Workflows" },
+      { src: "slide-15.svg", alt: "Slide 15 of 17: Integrations" },
+      { src: "slide-16.svg", alt: "Slide 16 of 17: .NET, Python, and Go support" },
+      { src: "slide-17.svg", alt: "Slide 17 of 17: Thank you for joining, questions?" }
     ];
     const slide = document.getElementById("slide");
     const counter = document.getElementById("counter");

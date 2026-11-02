@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/01 Example 01/">
+    <Project Path="example-01/TokenVisualizer.csproj" />
+  </Folder>
+</Solution>
