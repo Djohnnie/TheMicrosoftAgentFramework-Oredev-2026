@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "Example 25": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "TENANT_ID": "",
+        "CLIENT_ID": "",
+        "CLIENT_SECRET": "",
+        "FOUNDRY_ENDPOINT": "",
+        "FOUNDRY_AGENT_NAME": "",
+        "FOUNDRY_AGENT_VERSION": ""
+      }
+    }
+  }
+}

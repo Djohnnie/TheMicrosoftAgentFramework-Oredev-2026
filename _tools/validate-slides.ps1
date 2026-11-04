@@ -1,11 +1,16 @@
 $ErrorActionPreference = "Stop"
 
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
-$slideDirectory = Join-Path $repositoryRoot "_slides"
+$slideDirectory = Join-Path $repositoryRoot "slides"
 $resourceDirectory = Join-Path $repositoryRoot "_resources"
-$slideNames = 1..22 | ForEach-Object { "slide-{0:D2}.svg" -f $_ }
+$slideNames = 1..48 | ForEach-Object { "slide-{0:D2}.svg" -f $_ }
 $documentsToValidate = $slideNames + @("slide-template.svg")
 $repositoryUrl = "https://github.com/Djohnnie/TheMicrosoftAgentFramework-Oredev-2026"
+$solution = [xml](Get-Content -LiteralPath (Join-Path $repositoryRoot "exercises.slnx") -Raw)
+$solutionFolders = @($solution.SelectNodes("/Solution/Folder"))
+if ($solutionFolders.Count -ne 27) {
+    throw "Expected one descriptive solution folder for each of the 27 examples."
+}
 
 foreach ($slideName in $documentsToValidate) {
     $slidePath = Join-Path $slideDirectory $slideName
@@ -38,16 +43,21 @@ foreach ($slideName in $documentsToValidate) {
         throw "Missing subtle full-canvas dot pattern in $slideName."
     }
     if ($slideName -ne "slide-01.svg") {
-        $expectedHeader = switch ($slideName) {
-            "slide-02.svg" { "&gt;&gt; THE SPEAKER"; break }
-            "slide-03.svg" { "&gt;&gt; TAKE IT WITH YOU"; break }
-            { $_ -in @("slide-04.svg", "slide-05.svg", "slide-06.svg", "slide-07.svg", "slide-08.svg") } { "&gt;&gt; THE EVOLUTION OF AI"; break }
-            { $_ -in @("slide-09.svg", "slide-10.svg", "slide-11.svg", "slide-12.svg", "slide-13.svg", "slide-14.svg") } { "&gt;&gt; LLM FUNDAMENTALS"; break }
-            "slide-15.svg" { "&gt;&gt; EXAMPLE 01"; break }
-            { $_ -in @("slide-16.svg", "slide-17.svg", "slide-18.svg", "slide-19.svg", "slide-20.svg", "slide-21.svg") } { "&gt;&gt; THE AGENT FRAMEWORK"; break }
-            "slide-22.svg" { "&gt;&gt; THANK YOU FOR JOINING"; break }
-            "slide-template.svg" { "&gt;&gt; SECTION TITLE"; break }
-            default { throw "Unexpected slide name: $slideName" }
+        $slideNumber = if ($slideName -eq "slide-template.svg") { 0 } else { [int]$slideName.Substring(6, 2) }
+        if ($slideNumber -ge 22 -and $slideNumber -le 47) {
+            $expectedHeader = "&gt;&gt; EXAMPLE {0:D2}" -f ($slideNumber - 20)
+        } else {
+            $expectedHeader = switch ($slideName) {
+                "slide-02.svg" { "&gt;&gt; THE SPEAKER"; break }
+                "slide-03.svg" { "&gt;&gt; TAKE IT WITH YOU"; break }
+                { $_ -in @("slide-04.svg", "slide-05.svg", "slide-06.svg", "slide-07.svg", "slide-08.svg") } { "&gt;&gt; THE EVOLUTION OF AI"; break }
+                { $_ -in @("slide-09.svg", "slide-10.svg", "slide-11.svg", "slide-12.svg", "slide-13.svg", "slide-14.svg") } { "&gt;&gt; LLM FUNDAMENTALS"; break }
+                "slide-15.svg" { "&gt;&gt; EXAMPLE 01"; break }
+                { $_ -in @("slide-16.svg", "slide-17.svg", "slide-18.svg", "slide-19.svg", "slide-20.svg", "slide-21.svg") } { "&gt;&gt; THE AGENT FRAMEWORK"; break }
+                "slide-48.svg" { "&gt;&gt; THANK YOU FOR JOINING"; break }
+                "slide-template.svg" { "&gt;&gt; SECTION TITLE"; break }
+                default { throw "Unexpected slide name: $slideName" }
+            }
         }
         $header = $document.SelectSingleNode("//*[local-name()='text' and @x='88' and @y='86' and @font-size='30' and @fill='#dbf536']")
         if (-not $header -or $header.InnerText -ne $expectedHeader.Replace("&gt;", ">")) {
@@ -115,8 +125,8 @@ foreach ($slideName in $documentsToValidate) {
             throw "Missing standard repository footer link in $slideName."
         }
         $pageNumber = $document.SelectSingleNode("//*[local-name()='text' and @x='1832' and @y='1054' and @fill='#dbf536']")
-        $expectedPageNumber = if ($slideName -eq "slide-template.svg") { '^XX / 22$' } else { '^\d{2} / 22$' }
-        if (-not $pageNumber -or $pageNumber.InnerText -notmatch $expectedPageNumber) {
+        $expectedPageNumber = if ($slideName -eq "slide-template.svg") { "XX / 48" } else { "{0:D2} / 48" -f $slideNumber }
+        if (-not $pageNumber -or $pageNumber.InnerText -ne $expectedPageNumber) {
             throw "Missing green slide number in the expected format in $slideName."
         }
     }
@@ -135,23 +145,23 @@ foreach ($slideName in $documentsToValidate) {
             throw "Slide 3 should copy the QR SVG content instead of embedding it as an image."
         }
     }
-    if ($slideName -eq "slide-22.svg") {
+    if ($slideName -eq "slide-48.svg") {
         foreach ($closingText in @("Questions?", "Thanks for being part of the conversation.", "What questions can I answer?")) {
             if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='$closingText']")) {
-                throw "Slide 22 is missing closing-slide text: $closingText"
+                throw "Slide 48 is missing closing-slide text: $closingText"
             }
         }
         if ($document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='Thank you']") -or
             $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='for joining']")) {
-            throw "Slide 22 should keep the thank-you message in the header, not the title."
+            throw "Slide 48 should keep the thank-you message in the header, not the title."
         }
         $questionTitle = $document.SelectSingleNode("//*[local-name()='text' and @x='88' and @y='432' and @class='display' and normalize-space(.)='Questions?']")
         if (-not $questionTitle) {
-            throw "Slide 22 title should be Questions?."
+            throw "Slide 48 title should be Questions?."
         }
         $qrGroup = $document.SelectSingleNode("//*[local-name()='g' and @transform='translate(1167 195) scale(0.52734375)']")
         if (-not $qrGroup -or $qrGroup.SelectNodes("./*[local-name()='path']").Count -lt 400 -or $qrGroup.SelectSingleNode(".//*[local-name()='image']")) {
-            throw "Slide 22 is missing its inline repository QR artwork."
+            throw "Slide 48 is missing its inline repository QR artwork."
         }
     }
     if ($slideName -in @("slide-04.svg", "slide-05.svg", "slide-06.svg", "slide-07.svg", "slide-08.svg")) {
@@ -215,6 +225,54 @@ foreach ($slideName in $documentsToValidate) {
         }
         if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='examples\example-01']")) {
             throw "Slide 15 is missing the example-01 path."
+        }
+    }
+    if ($slideName -eq "slide-15.svg" -or $slideName -in (22..47 | ForEach-Object { "slide-{0:D2}.svg" -f $_ })) {
+        $exampleNumber = if ($slideName -eq "slide-15.svg") { 1 } else { [int]$slideName.Substring(6, 2) - 20 }
+        $example = "{0:D2}" -f $exampleNumber
+        $examplePath = "examples\example-$example"
+        $steps = $document.SelectSingleNode("//*[local-name()='g' and @aria-label='Example $example steps']")
+        $cards = if ($steps) { @($steps.SelectNodes("./*[local-name()='g']")) } else { @() }
+        if ($cards.Count -ne 3) {
+            throw "Example $example must contain three teaching blocks."
+        }
+        for ($cardIndex = 0; $cardIndex -lt $cards.Count; $cardIndex++) {
+            $card = $cards[$cardIndex]
+            $heading = $card.SelectSingleNode("./*[local-name()='text' and @y='520']")
+            $prefix = "{0} / " -f ($cardIndex + 1)
+            if (-not $heading -or -not $heading.InnerText.StartsWith($prefix) -or
+                [string]::IsNullOrWhiteSpace($card.GetAttribute("aria-label"))) {
+                throw "Example $example needs a numbered, accessible heading for each teaching block."
+            }
+            foreach ($y in @("566", "610", "654")) {
+                $body = $card.SelectSingleNode("./*[local-name()='text' and @y='$y']")
+                if (-not $body -or [string]::IsNullOrWhiteSpace($body.InnerText)) {
+                    throw "Example $example has an empty teaching point at y=$y."
+                }
+            }
+        }
+        $allText = ($document.SelectNodes("//*[local-name()='text']") | ForEach-Object { $_.InnerText }) -join "`n"
+        if ($allText -match "(?i)dotnet run|OPEN EXAMPLE|RUN THE PROJECT|EXERCISE FOCUS|KEY IDEA|Review setup") {
+            throw "Example $example must teach concepts rather than describe how to run it."
+        }
+        if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='$examplePath']") -or
+            -not (Test-Path -LiteralPath (Join-Path $repositoryRoot "$examplePath\README.md") -PathType Leaf)) {
+            throw "Example $example needs a source path pointing to its renamed directory."
+        }
+        $folder = @($solutionFolders | Where-Object { $_.GetAttribute("Name") -like "/Example $example - */" })
+        if ($folder.Count -ne 1) {
+            throw "Example $example needs a matching descriptive solution folder."
+        }
+        $projects = @($folder[0].SelectNodes("./Project"))
+        if ($projects.Count -lt 1) {
+            throw "Example $example has no projects in its solution folder."
+        }
+        foreach ($project in $projects) {
+            $projectPath = $project.GetAttribute("Path").Replace("/", "\")
+            if (-not $projectPath.StartsWith("examples\example-$example\") -or
+                -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $projectPath) -PathType Leaf)) {
+                throw "Example $example contains an invalid solution project path."
+            }
         }
     }
     if ($slideName -in @("slide-16.svg", "slide-17.svg", "slide-18.svg", "slide-19.svg", "slide-20.svg", "slide-21.svg")) {

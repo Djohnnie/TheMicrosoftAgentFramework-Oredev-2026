@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#121214">
+  <title>Enable GenAI · Øredev 2026</title>
+  <link rel="stylesheet" href="../_resources/oredev-theme.css">
+</head>
+<body>
+  <main class="deck" aria-label="Presentation">
+    <img class="slide" id="slide" src="slide-01.svg" alt="Slide 1 of 48: Enable GenAI in your applications">
+  </main>
+  <p class="hint">← → navigate · F fullscreen</p>
+  <nav class="controls" aria-label="Slide navigation">
+    <button id="previous" type="button" aria-label="Previous slide">←</button>
+    <span id="counter" aria-live="polite">01 / 48</span>
+    <button id="next" type="button" aria-label="Next slide">→</button>
+  </nav>
+  <script>
+    const slides = [
+      { src: "slide-01.svg", alt: "Slide 1 of 48: Enable GenAI in your applications" },
+      { src: "slide-02.svg", alt: "Slide 2 of 48: Johnny Hooyberghs" },
+      { src: "slide-03.svg", alt: "Slide 3 of 48: Scan to visit the repository" },
+      { src: "slide-04.svg", alt: "Slide 4 of 48: The evolution of AI" },
+      { src: "slide-05.svg", alt: "Slide 5 of 48: Rules-based AI" },
+      { src: "slide-06.svg", alt: "Slide 6 of 48: Machine learning" },
+      { src: "slide-07.svg", alt: "Slide 7 of 48: Deep learning" },
+      { src: "slide-08.svg", alt: "Slide 8 of 48: Generative AI" },
+      { src: "slide-09.svg", alt: "Slide 9 of 48: LLM generation, prompt and context" },
+      { src: "slide-10.svg", alt: "Slide 10 of 48: LLM generation, tokenization" },
+      { src: "slide-11.svg", alt: "Slide 11 of 48: LLM generation, embeddings" },
+      { src: "slide-12.svg", alt: "Slide 12 of 48: LLM generation, next-token prediction" },
+      { src: "slide-13.svg", alt: "Slide 13 of 48: LLM generation, selection and append" },
+      { src: "slide-14.svg", alt: "Slide 14 of 48: LLM context window and streaming takeaways" },
+      { src: "slide-15.svg", alt: "Slide 15 of 48: Example 01 tokenization demo" },
+      { src: "slide-16.svg", alt: "Slide 16 of 48: The Agent Framework introduction" },
+      { src: "slide-17.svg", alt: "Slide 17 of 48: Agents" },
+      { src: "slide-18.svg", alt: "Slide 18 of 48: Harness agent" },
+      { src: "slide-19.svg", alt: "Slide 19 of 48: Workflows" },
+      { src: "slide-20.svg", alt: "Slide 20 of 48: Integrations" },
+      { src: "slide-21.svg", alt: "Slide 21 of 48: .NET, Python, and Go support" },
+      { src: "slide-22.svg", alt: "Slide 22 of 48: Example 02 simple chatbot" },
+      { src: "slide-23.svg", alt: "Slide 23 of 48: Example 03 chatbot with history" },
+      { src: "slide-24.svg", alt: "Slide 24 of 48: Example 04 chatbot with token usage" },
+      { src: "slide-25.svg", alt: "Slide 25 of 48: Example 05 chatbot personas" },
+      { src: "slide-26.svg", alt: "Slide 26 of 48: Example 06 structured output" },
+      { src: "slide-27.svg", alt: "Slide 27 of 48: Example 07 local Ollama chatbot" },
+      { src: "slide-28.svg", alt: "Slide 28 of 48: Example 08 chatbot agent" },
+      { src: "slide-29.svg", alt: "Slide 29 of 48: Example 09 multimodal images" },
+      { src: "slide-30.svg", alt: "Slide 30 of 48: Example 10 multimodal audio" },
+      { src: "slide-31.svg", alt: "Slide 31 of 48: Example 11 chatbot agent with tools" },
+      { src: "slide-32.svg", alt: "Slide 32 of 48: Example 12 local chatbot agent with tools" },
+      { src: "slide-33.svg", alt: "Slide 33 of 48: Example 13 dependency injection for agent tools" },
+      { src: "slide-34.svg", alt: "Slide 34 of 48: Example 14 Microsoft Learn MCP agent" },
+      { src: "slide-35.svg", alt: "Slide 35 of 48: Example 15 host date and time tools with MCP" },
+      { src: "slide-36.svg", alt: "Slide 36 of 48: Example 16 chatbot agent with tool approval" },
+      { src: "slide-37.svg", alt: "Slide 37 of 48: Example 17 terrible startup pitch manual orchestration" },
+      { src: "slide-38.svg", alt: "Slide 38 of 48: Example 18 terrible startup pitch workflow" },
+      { src: "slide-39.svg", alt: "Slide 39 of 48: Example 19 terrible startup pitch human input pauses" },
+      { src: "slide-40.svg", alt: "Slide 40 of 48: Example 20 terrible startup pitch concurrent investors" },
+      { src: "slide-41.svg", alt: "Slide 41 of 48: Example 21 a name is not authentication" },
+      { src: "slide-42.svg", alt: "Slide 42 of 48: Example 22 authenticated caller and tool arguments" },
+      { src: "slide-43.svg", alt: "Slide 43 of 48: Example 23 trusted user context through dependency injection" },
+      { src: "slide-44.svg", alt: "Slide 44 of 48: Example 24 authenticate across an MCP boundary" },
+      { src: "slide-45.svg", alt: "Slide 45 of 48: Example 25 Microsoft Foundry Prompt Agent" },
+      { src: "slide-46.svg", alt: "Slide 46 of 48: Example 26 save and restore a local agent session" },
+      { src: "slide-47.svg", alt: "Slide 47 of 48: Example 27 compact local history with summaries" },
+      { src: "slide-48.svg", alt: "Slide 48 of 48: Thank you for joining, questions?" }
+    ];
+    const slide = document.getElementById("slide");
+    const counter = document.getElementById("counter");
+    const previous = document.getElementById("previous");
+    const next = document.getElementById("next");
+    let current = 0;
+
+    function showSlide(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slide.src = slides[current].src;
+      slide.alt = slides[current].alt;
+      counter.textContent = `${String(current + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+      previous.disabled = current === 0;
+      next.disabled = current === slides.length - 1;
+    }
+
+    previous.addEventListener("click", () => showSlide(current - 1));
+    next.addEventListener("click", () => showSlide(current + 1));
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft") showSlide(current - 1);
+      if (event.key === "ArrowRight") showSlide(current + 1);
+      if (event.key.toLowerCase() === "f") document.querySelector(".deck").requestFullscreen();
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>

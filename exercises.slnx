@@ -1,0 +1,85 @@
+<Solution>
+  <Folder Name="/Example 01 - Tokenization demo/">
+    <Project Path="examples/example-01/TokenVisualizer.csproj" />
+  </Folder>
+  <Folder Name="/Example 02 - Simple Chatbot/">
+    <Project Path="examples/example-02/SimpleChatbot.csproj" />
+  </Folder>
+  <Folder Name="/Example 03 - Chatbot with History/">
+    <Project Path="examples/example-03/ChatbotWithHistory.csproj" />
+  </Folder>
+  <Folder Name="/Example 04 - Chatbot with Token Usage/">
+    <Project Path="examples/example-04/ChatbotWithTokenUsage.csproj" />
+  </Folder>
+  <Folder Name="/Example 05 - Chatbot Personas/">
+    <Project Path="examples/example-05/ChatbotPersonas.csproj" />
+  </Folder>
+  <Folder Name="/Example 06 - Structured Output/">
+    <Project Path="examples/example-06/StructuredOutput.csproj" />
+  </Folder>
+  <Folder Name="/Example 07 - Local Ollama Chatbot/">
+    <Project Path="examples/example-07/LocalChatbot.csproj" />
+  </Folder>
+  <Folder Name="/Example 08 - Chatbot Agent/">
+    <Project Path="examples/example-08/ChatbotAgent.csproj" />
+  </Folder>
+  <Folder Name="/Example 09 - Multimodal Images/">
+    <Project Path="examples/example-09/MultimodalImages.csproj" />
+  </Folder>
+  <Folder Name="/Example 10 - Multimodal Audio/">
+    <Project Path="examples/example-10/MultimodalAudio.csproj" />
+  </Folder>
+  <Folder Name="/Example 11 - Chatbot Agent with Tools/">
+    <Project Path="examples/example-11/ChatbotAgentWithTools.csproj" />
+  </Folder>
+  <Folder Name="/Example 12 - Local Chatbot with Tools/">
+    <Project Path="examples/example-12/LocalChatbotAgentWithTools.csproj" />
+  </Folder>
+  <Folder Name="/Example 13 - Dependency Injection for Agent Tools/">
+    <Project Path="examples/example-13/ChatbotAgentWithDependencyInjection.csproj" />
+  </Folder>
+  <Folder Name="/Example 14 - Microsoft Learn MCP Agent/">
+    <Project Path="examples/example-14/ChatbotAgentWithLearnMcp.csproj" />
+  </Folder>
+  <Folder Name="/Example 15 - Host Date and Time Tools with MCP/">
+    <Project Path="examples/example-15/server/DateTimeMcpServer.csproj" />
+    <Project Path="examples/example-15/client/ChatbotAgentWithMcpServer.csproj" />
+  </Folder>
+  <Folder Name="/Example 16 - Chatbot Agent with Tool Approval/">
+    <Project Path="examples/example-16/ChatbotAgentWithApproval.csproj" />
+  </Folder>
+  <Folder Name="/Example 17 - Terrible Startup Pitch - Manual Orchestration/">
+    <Project Path="examples/example-17/StartupPitchManual.csproj" />
+  </Folder>
+  <Folder Name="/Example 18 - Terrible Startup Pitch - Agent Framework Workflow/">
+    <Project Path="examples/example-18/StartupPitchWorkflow.csproj" />
+  </Folder>
+  <Folder Name="/Example 19 - Terrible Startup Pitch - Human Input Pauses/">
+    <Project Path="examples/example-19/StartupPitchHumanInput.csproj" />
+  </Folder>
+  <Folder Name="/Example 20 - Terrible Startup Pitch - Concurrent Investors/">
+    <Project Path="examples/example-20/StartupPitchConcurrent.csproj" />
+  </Folder>
+  <Folder Name="/Example 21 - A Name Is Not Authentication/">
+    <Project Path="examples/example-21/SnackAgentByName.csproj" />
+  </Folder>
+  <Folder Name="/Example 22 - Authenticated, but Still Trusting a Tool Argument/">
+    <Project Path="examples/example-22/SnackAgentWithUserId.csproj" />
+  </Folder>
+  <Folder Name="/Example 23 - Trusted User Context Through Dependency Injection/">
+    <Project Path="examples/example-23/SnackAgentWithUserContext.csproj" />
+  </Folder>
+  <Folder Name="/Example 24 - Authenticate Across an MCP Boundary/">
+    <Project Path="examples/example-24/server/SnackMcpServer.csproj" />
+    <Project Path="examples/example-24/client/SnackAgentWithAuthenticatedMcp.csproj" />
+  </Folder>
+  <Folder Name="/Example 25 - Chat with a Microsoft Foundry Prompt Agent/">
+    <Project Path="examples/example-25/FoundryAgent.csproj" />
+  </Folder>
+  <Folder Name="/Example 26 - Save and Restore a Local Agent Session/">
+    <Project Path="examples/example-26/SessionPersistence.csproj" />
+  </Folder>
+  <Folder Name="/Example 27 - Compact Local History with Summaries/">
+    <Project Path="examples/example-27/HistoryCompaction.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Example 20": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "FOUNDRY_ENDPOINT": "",
+        "FOUNDRY_API_KEY": "",
+        "FOUNDRY_MODEL_DEPLOYMENT": ""
+      }
+    }
+  }
+}
