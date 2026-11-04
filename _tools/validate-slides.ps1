@@ -3,9 +3,9 @@ $ErrorActionPreference = "Stop"
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $slideDirectory = Join-Path $repositoryRoot "_slides"
 $resourceDirectory = Join-Path $repositoryRoot "_resources"
-$slideNames = 1..17 | ForEach-Object { "slide-{0:D2}.svg" -f $_ }
+$slideNames = 1..22 | ForEach-Object { "slide-{0:D2}.svg" -f $_ }
 $documentsToValidate = $slideNames + @("slide-template.svg")
-$repositoryUrl = "https://github.com/Djohnnie/TheMicrosoftAgentFramework--redev-2026"
+$repositoryUrl = "https://github.com/Djohnnie/TheMicrosoftAgentFramework-Oredev-2026"
 
 foreach ($slideName in $documentsToValidate) {
     $slidePath = Join-Path $slideDirectory $slideName
@@ -18,6 +18,11 @@ foreach ($slideName in $documentsToValidate) {
     $document.Load($slidePath)
 
     $root = $document.DocumentElement
+    foreach ($githubLink in $document.SelectNodes("//*[local-name()='a' and starts-with(@href, 'https://github.com/')]")) {
+        if ($githubLink.GetAttribute("href") -ne $repositoryUrl) {
+            throw "Unexpected GitHub link in $slideName; expected $repositoryUrl."
+        }
+    }
     if ($root.GetAttribute("viewBox") -ne "0 0 1920 1080") {
         throw "Unexpected canvas on $slideName; expected a 1920x1080 viewBox."
     }
@@ -37,10 +42,10 @@ foreach ($slideName in $documentsToValidate) {
             "slide-02.svg" { "&gt;&gt; THE SPEAKER"; break }
             "slide-03.svg" { "&gt;&gt; TAKE IT WITH YOU"; break }
             { $_ -in @("slide-04.svg", "slide-05.svg", "slide-06.svg", "slide-07.svg", "slide-08.svg") } { "&gt;&gt; THE EVOLUTION OF AI"; break }
-            "slide-09.svg" { "&gt;&gt; LLM FUNDAMENTALS"; break }
-            "slide-10.svg" { "&gt;&gt; EXAMPLE 01 / HANDS-ON"; break }
-            { $_ -in @("slide-11.svg", "slide-12.svg", "slide-13.svg", "slide-14.svg", "slide-15.svg", "slide-16.svg") } { "&gt;&gt; THE AGENT FRAMEWORK"; break }
-            "slide-17.svg" { "&gt;&gt; THANK YOU FOR JOINING"; break }
+            { $_ -in @("slide-09.svg", "slide-10.svg", "slide-11.svg", "slide-12.svg", "slide-13.svg", "slide-14.svg") } { "&gt;&gt; LLM FUNDAMENTALS"; break }
+            "slide-15.svg" { "&gt;&gt; EXAMPLE 01"; break }
+            { $_ -in @("slide-16.svg", "slide-17.svg", "slide-18.svg", "slide-19.svg", "slide-20.svg", "slide-21.svg") } { "&gt;&gt; THE AGENT FRAMEWORK"; break }
+            "slide-22.svg" { "&gt;&gt; THANK YOU FOR JOINING"; break }
             "slide-template.svg" { "&gt;&gt; SECTION TITLE"; break }
             default { throw "Unexpected slide name: $slideName" }
         }
@@ -110,7 +115,7 @@ foreach ($slideName in $documentsToValidate) {
             throw "Missing standard repository footer link in $slideName."
         }
         $pageNumber = $document.SelectSingleNode("//*[local-name()='text' and @x='1832' and @y='1054' and @fill='#dbf536']")
-        $expectedPageNumber = if ($slideName -eq "slide-template.svg") { '^XX / 17$' } else { '^\d{2} / 17$' }
+        $expectedPageNumber = if ($slideName -eq "slide-template.svg") { '^XX / 22$' } else { '^\d{2} / 22$' }
         if (-not $pageNumber -or $pageNumber.InnerText -notmatch $expectedPageNumber) {
             throw "Missing green slide number in the expected format in $slideName."
         }
@@ -130,23 +135,23 @@ foreach ($slideName in $documentsToValidate) {
             throw "Slide 3 should copy the QR SVG content instead of embedding it as an image."
         }
     }
-    if ($slideName -eq "slide-17.svg") {
+    if ($slideName -eq "slide-22.svg") {
         foreach ($closingText in @("Questions?", "Thanks for being part of the conversation.", "What questions can I answer?")) {
             if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='$closingText']")) {
-                throw "Slide 17 is missing closing-slide text: $closingText"
+                throw "Slide 22 is missing closing-slide text: $closingText"
             }
         }
         if ($document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='Thank you']") -or
             $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='for joining']")) {
-            throw "Slide 17 should keep the thank-you message in the header, not the title."
+            throw "Slide 22 should keep the thank-you message in the header, not the title."
         }
         $questionTitle = $document.SelectSingleNode("//*[local-name()='text' and @x='88' and @y='432' and @class='display' and normalize-space(.)='Questions?']")
         if (-not $questionTitle) {
-            throw "Slide 17 title should be Questions?."
+            throw "Slide 22 title should be Questions?."
         }
         $qrGroup = $document.SelectSingleNode("//*[local-name()='g' and @transform='translate(1167 195) scale(0.52734375)']")
         if (-not $qrGroup -or $qrGroup.SelectNodes("./*[local-name()='path']").Count -lt 400 -or $qrGroup.SelectSingleNode(".//*[local-name()='image']")) {
-            throw "Slide 17 is missing its inline repository QR artwork."
+            throw "Slide 22 is missing its inline repository QR artwork."
         }
     }
     if ($slideName -in @("slide-04.svg", "slide-05.svg", "slide-06.svg", "slide-07.svg", "slide-08.svg")) {
@@ -168,38 +173,52 @@ foreach ($slideName in $documentsToValidate) {
             throw "The approach note should appear only on slide 8."
         }
     }
-    if ($slideName -eq "slide-09.svg") {
+    if ($slideName -in @("slide-09.svg", "slide-10.svg", "slide-11.svg", "slide-12.svg", "slide-13.svg", "slide-14.svg")) {
         $sourceUrl = "https://learn.microsoft.com/en-us/agent-framework/journey/llm-fundamentals"
         $sourceLink = $document.SelectSingleNode("//*[local-name()='a' and @href='$sourceUrl']")
         if (-not $sourceLink -or $sourceLink.InnerText -ne $sourceUrl) {
-            throw "Slide 9 is missing its Microsoft Learn LLM fundamentals source link."
+            throw "Slide $($slideName.Substring(6, 2)) is missing its Microsoft Learn LLM fundamentals source link."
         }
-        foreach ($processStep in @("Input", "Tokenization", "Embeddings", "Next-token prediction", "Selection and append")) {
-            if (-not $document.SelectSingleNode("//*[local-name()='g' and @aria-label='$processStep']")) {
-                throw "Slide 9 is missing the $processStep stage."
+        $stage = [int]$slideName.Substring(6, 2) - 8
+        $processSteps = @("Input", "Tokenization", "Embeddings", "Next-token prediction", "Selection and append")
+        for ($stepIndex = 0; $stepIndex -lt $processSteps.Count; $stepIndex++) {
+            $processStep = $processSteps[$stepIndex]
+            $step = $document.SelectSingleNode("//*[local-name()='g' and @aria-label='$processStep']")
+            $shouldBeHidden = $stage -le $stepIndex
+            if (-not $step -or (($step.GetAttribute("style") -eq "display:none") -ne $shouldBeHidden)) {
+                throw "Slide $slideName has an unexpected reveal state for $processStep."
             }
         }
-        if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='Repeat prediction and appending until a stop token or output limit.']")) {
-            throw "Slide 9 is missing the autoregressive generation loop takeaway."
+        $takeaways = @(
+            "Each token uses full context: prompt, history, injected context and response share one fixed window.",
+            "One full model pass per token makes longer replies slower; streaming delivers tokens as they arrive."
+        )
+        for ($takeawayIndex = 0; $takeawayIndex -lt $takeaways.Count; $takeawayIndex++) {
+            $takeaway = $takeaways[$takeawayIndex]
+            $takeawayNode = $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='$takeaway']")
+            $shouldBeHidden = $stage -lt 6
+            if (-not $takeawayNode -or (($takeawayNode.GetAttribute("style") -eq "display:none") -ne $shouldBeHidden)) {
+                throw "Slide $slideName has an unexpected reveal state for takeaway: $takeaway"
+            }
         }
     }
-    if ($slideName -eq "slide-10.svg") {
-        $sourceUrl = "https://github.com/Djohnnie/MicrosoftAgentFrameworkWorkshop-DotNetDeveloperDays-Warsaw-2026/tree/main/exercises/exercise-001"
+    if ($slideName -eq "slide-15.svg") {
+        $sourceUrl = $repositoryUrl
         $sourceLink = $document.SelectSingleNode("//*[local-name()='a' and @href='$sourceUrl']")
         if (-not $sourceLink -or $sourceLink.InnerText -ne $sourceUrl) {
-            throw "Slide 10 is missing its Token Visualizer source link."
+            throw "Slide 15 is missing its Token Visualizer source link."
         }
-        foreach ($step in @("Configure", "Run", "Explore")) {
+        foreach ($step in @("Request and response", "Conversation history", "Different languages")) {
             if (-not $document.SelectSingleNode("//*[local-name()='g' and @aria-label='$step']")) {
-                throw "Slide 10 is missing the $step step."
+                throw "Slide 15 is missing the $step step."
             }
         }
         if (-not $document.SelectSingleNode("//*[local-name()='text' and normalize-space(.)='examples\example-01']")) {
-            throw "Slide 10 is missing the example-01 path."
+            throw "Slide 15 is missing the example-01 path."
         }
     }
-    if ($slideName -in @("slide-11.svg", "slide-12.svg", "slide-13.svg", "slide-14.svg", "slide-15.svg", "slide-16.svg")) {
-        $stage = [int]$slideName.Substring(6, 2) - 10
+    if ($slideName -in @("slide-16.svg", "slide-17.svg", "slide-18.svg", "slide-19.svg", "slide-20.svg", "slide-21.svg")) {
+        $stage = [int]$slideName.Substring(6, 2) - 15
         $frameworkHeader = $document.SelectSingleNode("//*[local-name()='text' and @x='88' and @y='86']")
         if (-not $frameworkHeader -or $frameworkHeader.InnerText -ne ">> THE AGENT FRAMEWORK") {
             throw "Slide $slideName is missing the THE AGENT FRAMEWORK header."
