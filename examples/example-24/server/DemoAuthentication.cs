@@ -7,7 +7,7 @@ public static class DemoAuthentication
 {
     public const string Scheme = "SnackBearer";
 
-    // Public workshop credentials, not a production identity store.
+    // Public example credentials, not a production identity store.
     public static DemoUser? Authenticate(string? name, string? password) =>
         (name?.ToLowerInvariant(), password) switch
         {

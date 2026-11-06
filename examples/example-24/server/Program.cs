@@ -32,5 +32,5 @@ app.MapPost("/auth", (SignInRequest request) =>
 });
 
 app.MapMcp("/mcp").RequireAuthorization();
-// HTTP and public demo passwords are for loopback workshop use only.
+// HTTP and public demo passwords are for loopback use in this example only.
 app.Run();

@@ -4,7 +4,7 @@ public record DemoUser(string Id, string Name);
 
 public static class DemoAuthentication
 {
-    // Public workshop credentials, not a production identity store.
+    // Public example credentials, not a production identity store.
     public static DemoUser? Authenticate(string? name, string? password) =>
         (name?.ToLowerInvariant(), password) switch
         {

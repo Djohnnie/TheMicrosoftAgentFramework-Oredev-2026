@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Demo Launcher/">
+    <Project Path="examples/DemoLauncher/DemoLauncher.csproj" />
+  </Folder>
   <Folder Name="/Example 01 - Tokenization demo/">
     <Project Path="examples/example-01/TokenVisualizer.csproj" />
   </Folder>

@@ -8,6 +8,35 @@ Open the [offline slide preview](slides/index.html) to navigate all forty-eight 
 
 The 27 examples live in `examples\example-01` through `examples\example-27`. Open [`exercises.slnx`](exercises.slnx) for their individually named solution folders; each example's README describes its requirements and usage.
 
+## Demo launcher
+
+Run the interactive console menu from the repository root with the .NET 10 SDK:
+
+```powershell
+dotnet run --project examples\DemoLauncher\DemoLauncher.csproj
+```
+
+The Spectre.Console menu uses the presentation's lime accent, with arrow-key navigation, type-to-search, and an **Exit launcher** option. Press Enter to launch the highlighted example; MCP examples are labeled. Redirected or non-interactive terminals retain the numbered menu (`0` or `quit` exits).
+
+Before showing the menu, the launcher builds all example projects and MCP servers once. It excludes its own running project from that build. Every subsequent selection uses `dotnet run --no-build`, so switching examples does not trigger build or restore checks. A failed or cancelled startup build exits without showing the menu.
+
+Each example runs as a separate process in the same terminal, with its own project directory as its working directory. Exit the example normally to return to the menu, or press Ctrl+C to stop it. Ctrl+C at the menu exits the launcher.
+
+The launcher reads example names and project paths from `exercises.slnx`; it does not duplicate or change the examples. Environment variables and each example's local launch profile continue to supply configuration. Foundry credentials, Ollama, model deployments, and other prerequisites described in the example READMEs are still required.
+
+For examples 15 and 24, the launcher starts the matching MCP server on loopback ports 5285 and 5404, waits for HTTP readiness, then starts the client. It stops its server when the client exits, fails, or is cancelled. Server output is captured separately and shown if server startup or execution fails. An occupied port is reported rather than reusing or stopping someone else's server. Example 24's client is explicitly pointed at the managed local server, overriding `SNACK_SERVER_URL` for that child process only. Server launch profiles are skipped so their URLs cannot override the managed endpoints.
+
+If everything is already built, you can skip the initial build as well:
+
+```powershell
+dotnet build exercises.slnx
+dotnet run --project examples\DemoLauncher\DemoLauncher.csproj --no-build -- --no-build
+```
+
+The first `--no-build` skips building the launcher; the second skips its one-time example build. Both builds use Debug by default. Keep the repository and SDK available: this is a source-based launcher, not a bundle of the example executables. `dotnet run --no-build` still has some project-evaluation overhead.
+
+Run `pwsh -File _tools\validate-demo-launcher.ps1` for isolated launcher checks using temporary local fixtures. These require ports 5285 and 5404 to be unused and do not call Foundry or need credentials.
+
 ## Presentation slides
 
 ### Slide 1 / Enable GenAI in your applications

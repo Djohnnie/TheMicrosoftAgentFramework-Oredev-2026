@@ -7,12 +7,9 @@ using OpenAI.Responses;
 
 #pragma warning disable OPENAI001
 
-var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
-var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY")
-    ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
-var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
+var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT") ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
+var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY") ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
+var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT") ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
 
 ResponsesClient client = new(
     credential: new ApiKeyCredential(key),
@@ -30,7 +27,7 @@ AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions
     ChatOptions = new ChatOptions
     {
         Instructions = """
-            You are a helpful workshop assistant. Give short, friendly answers.
+            You are a helpful example assistant. Give short, friendly answers.
             Remember facts shared in this conversation.
             If the conversation does not contain an answer, say so instead of guessing.
             """,

@@ -5,12 +5,9 @@ using OpenAI.Responses;
 
 #pragma warning disable OPENAI001
 
-var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
-var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY")
-    ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
-var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
+var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT") ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
+var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY") ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
+var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT") ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
 
 ResponsesClient client = new(new ApiKeyCredential(key), new ResponsesClientOptions
 {

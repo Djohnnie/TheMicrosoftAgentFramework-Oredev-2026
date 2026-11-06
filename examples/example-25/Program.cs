@@ -4,18 +4,12 @@ using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Foundry;
 
-var tenantId = Environment.GetEnvironmentVariable("TENANT_ID")
-    ?? throw new InvalidOperationException("Set TENANT_ID");
-var clientId = Environment.GetEnvironmentVariable("CLIENT_ID")
-    ?? throw new InvalidOperationException("Set CLIENT_ID");
-var clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")
-    ?? throw new InvalidOperationException("Set CLIENT_SECRET");
-var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT to your Foundry project endpoint");
-var agentName = Environment.GetEnvironmentVariable("FOUNDRY_AGENT_NAME")
-    ?? throw new InvalidOperationException("Set FOUNDRY_AGENT_NAME to your Foundry prompt agent's name");
-var agentVersion = Environment.GetEnvironmentVariable("FOUNDRY_AGENT_VERSION")
-    ?? throw new InvalidOperationException("Set FOUNDRY_AGENT_VERSION to an existing agent version");
+var tenantId = Environment.GetEnvironmentVariable("TENANT_ID") ?? throw new InvalidOperationException("Set TENANT_ID");
+var clientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? throw new InvalidOperationException("Set CLIENT_ID");
+var clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET") ?? throw new InvalidOperationException("Set CLIENT_SECRET");
+var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT") ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT to your Foundry project endpoint");
+var agentName = Environment.GetEnvironmentVariable("FOUNDRY_AGENT_NAME") ?? throw new InvalidOperationException("Set FOUNDRY_AGENT_NAME to your Foundry prompt agent's name");
+var agentVersion = Environment.GetEnvironmentVariable("FOUNDRY_AGENT_VERSION") ?? throw new InvalidOperationException("Set FOUNDRY_AGENT_VERSION to an existing agent version");
 
 var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
 var projectClient = new AIProjectClient(new Uri(endpoint), credential);

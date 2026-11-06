@@ -19,12 +19,9 @@ Console.WriteLine("Date and time tools available from the local MCP server:");
 foreach (McpClientTool tool in mcpTools)
     Console.WriteLine(SingleLine($"- {tool.Name}: {tool.Description}"));
 
-var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
-var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY")
-    ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
-var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
+var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT") ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
+var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY") ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
+var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT") ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
 
 ResponsesClient responsesClient = new(
     credential: new ApiKeyCredential(key),

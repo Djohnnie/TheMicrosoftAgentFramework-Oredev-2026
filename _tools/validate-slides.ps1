@@ -7,7 +7,7 @@ $slideNames = 1..48 | ForEach-Object { "slide-{0:D2}.svg" -f $_ }
 $documentsToValidate = $slideNames + @("slide-template.svg")
 $repositoryUrl = "https://github.com/Djohnnie/TheMicrosoftAgentFramework-Oredev-2026"
 $solution = [xml](Get-Content -LiteralPath (Join-Path $repositoryRoot "exercises.slnx") -Raw)
-$solutionFolders = @($solution.SelectNodes("/Solution/Folder"))
+$solutionFolders = @($solution.SelectNodes("/Solution/Folder") | Where-Object { $_.GetAttribute("Name") -match "^/Example \d{2} - .+/$" })
 if ($solutionFolders.Count -ne 27) {
     throw "Expected one descriptive solution folder for each of the 27 examples."
 }

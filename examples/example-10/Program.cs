@@ -1,12 +1,9 @@
 using Azure.AI.OpenAI;
 using System.ClientModel;
 
-var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
-var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY")
-    ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
-var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
+var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT") ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
+var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY") ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
+var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT") ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
 
 var openAIClient = new AzureOpenAIClient(new Uri(endpoint), new ApiKeyCredential(key));
 var client = openAIClient.GetAudioClient("whisper");

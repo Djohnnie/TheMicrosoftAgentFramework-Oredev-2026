@@ -7,12 +7,9 @@ using OpenAI.Responses;
 
 #pragma warning disable OPENAI001
 
-var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
-var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY")
-    ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
-var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT")
-    ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
+var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_ENDPOINT") ?? throw new InvalidOperationException("Set FOUNDRY_ENDPOINT");
+var key = Environment.GetEnvironmentVariable("FOUNDRY_API_KEY") ?? throw new InvalidOperationException("Set FOUNDRY_API_KEY");
+var model = Environment.GetEnvironmentVariable("FOUNDRY_MODEL_DEPLOYMENT") ?? throw new InvalidOperationException("Set FOUNDRY_MODEL_DEPLOYMENT");
 
 ResponsesClient client = new(
     credential: new ApiKeyCredential(key),
@@ -44,7 +41,7 @@ AgentSession session = await agent.CreateSessionAsync();
 
 Console.WriteLine("Example 23: the snack tool reads identity from dependency injection, not chat.");
 Console.WriteLine("Commands: /auth, /logout, quit. Demo accounts: Alice / alice-snacks, Bob / bob-snacks.");
-Console.WriteLine("Passwords are visible while typing in this workshop console; never enter real credentials.");
+Console.WriteLine("Passwords are visible while typing in this example console; never enter real credentials.");
 
 while (true)
 {
