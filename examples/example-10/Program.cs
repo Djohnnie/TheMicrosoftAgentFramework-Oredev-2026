@@ -22,3 +22,9 @@ using (var audio = File.OpenRead(path))
     var response = await client.TranslateAudioAsync(audio, Path.GetFileName(path));
     Console.WriteLine($"[ASSISTANT]: Translation (English): {response.Value.Text}");
 }
+
+if (!Console.IsInputRedirected)
+{
+    Console.WriteLine("\nPress any key to exit...");
+    Console.ReadKey(intercept: true);
+}

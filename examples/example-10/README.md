@@ -36,6 +36,6 @@ From the repository root:
 dotnet run --project examples\example-10\MultimodalAudio.csproj
 ```
 
-The program prints the French transcription and English translation, then exits. Compare the meaning, names, and punctuation rather than assuming a fluent result is correct.
+The program prints the French transcription and English translation, then waits for any key before exiting so the results stay visible when launched from the demo menu. The pause is skipped when standard input is redirected. Compare the meaning, names, and punctuation rather than assuming a fluent result is correct.
 
 Changing the recording's file name or format also requires updating `Program.cs` and the project's copy entry. Configuration, file, unsupported-deployment, and API errors propagate as exceptions.

@@ -28,4 +28,4 @@ From the repository root:
 dotnet run --project examples\example-09\MultimodalImages.csproj
 ```
 
-The program prints the URL-based and inline translations, then exits; there is no interactive input loop. Compare both outputs with the original image. Configuration, file, and API errors propagate as exceptions.
+The program prints the URL-based and inline translations, then waits for any key before exiting so the results stay visible when launched from the demo menu. The pause is skipped when standard input is redirected. There is no interactive input loop. Compare both outputs with the original image. Configuration, file, and API errors propagate as exceptions.

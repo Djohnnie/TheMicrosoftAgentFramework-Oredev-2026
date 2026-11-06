@@ -53,3 +53,9 @@ AgentSession inlineSession = await agent.CreateSessionAsync();
 var inlineResponse = await agent.RunAsync(
     new ChatMessage(ChatRole.User, [prompt, inlineImage]), inlineSession);
 Console.WriteLine($"[ASSISTANT]: From inline bytes: {inlineResponse.Text}");
+
+if (!Console.IsInputRedirected)
+{
+    Console.WriteLine("\nPress any key to exit...");
+    Console.ReadKey(intercept: true);
+}
